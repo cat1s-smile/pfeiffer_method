@@ -31,6 +31,4 @@ public class Utils {
             throw new IllegalArgumentException("invalid key format");
         return key;
     }
-
-    public ind()
 }

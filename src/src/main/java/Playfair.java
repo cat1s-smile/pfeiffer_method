@@ -1,21 +1,20 @@
 package main.java;
 
 public class Playfair {
-    public static String encrypt(String text, char[][] key) {
-        StringBuilder encryptedText = new StringBuilder();
-        //text.
-        //encryptedText
-        String[] words = text.split(" ");
+    private static StringBuilder encryptLine(StringBuilder text, String line, char[][] key) {
+        //line.
+        //encryptedline
+        String[] words = line.split(" ");
         for (String word : words) {
             word = word.replaceAll("j", "i");
             int length = word.length();
             if (length % 2 != 0) {
-                word += "x";
+                word = word.concat("x");
                 length++;
             }
-            for (int i = 0; i < length;) {
-                char txt1 = text.charAt(i++);
-                char txt2 = text.charAt(i++);
+            for (int i = 0; i < length; ) {
+                char txt1 = line.charAt(i++);
+                char txt2 = line.charAt(i++);
                 if (txt1 == txt2)
                     txt2 = 'x';
                 int txt1_j = -1, txt1_k = -1;
@@ -32,7 +31,8 @@ public class Playfair {
                     }
                 }
                 int txt2_j = -1, txt2_k = -1;
-                calc2: {
+                calc2:
+                {
                     for (int j = 0; j < 5; j++) {
                         for (int k = 0; k < 5; k++) {
                             if (key[j][k] == txt2) {
@@ -44,19 +44,36 @@ public class Playfair {
                     }
                 }
                 if (txt1_j != txt2_j && txt1_k != txt2_k) {
-                    txt1 = key[txt2_j][txt1_k];
-                    txt2 = key[txt1_k][txt2_k];
+                    txt1 = key[txt1_j][txt2_k];
+                    txt2 = key[txt2_j][txt1_k];
                 }
+                if (txt1_j == txt2_j && txt1_k != txt2_k) {
+                    txt1 = key[txt1_j][(txt1_k + 1) % 5];
+                    txt2 = key[txt2_j][(txt2_k + 1) % 5];
+                }
+                if (txt1_j != txt2_j && txt1_k == txt2_k) {
+                    txt1 = key[(txt1_j + 1) % 5][txt1_k];
+                    txt2 = key[(txt2_j + 1) % 5][txt2_k];
+                }
+                if (txt1_j == txt2_j && txt1_k == txt2_k) { // 'x' == 'x'
+                    txt1 = txt2 = key[txt1_j][(txt1_k + 1) % 5];
+                }
+                text.append(txt1).append(txt2);
 
             }
-
+            text.append(' ');
         }
-        int length = text.length();
-        while (i < length) {
+        text.deleteCharAt(text.length() - 1); // #FIXME or kill me
+        return text;
+    }
 
-
+    public static StringBuilder encrypt(String text, char[][] key) {
+        String[] lines = text.split("\n");
+        StringBuilder encryptedText = new StringBuilder();
+        for (String line : lines) {
+            encryptLine(encryptedText, line, key);
         }
-        return null;
+        return encryptedText;
     }
 
 

@@ -12,20 +12,20 @@ public class Utils {
         BufferedReader reader = new BufferedReader(new FileReader(keyFile));
         char[][] key = new char[5][5];
         int i = 0;
-        String line = null;
-        do {
-            line = reader.readLine();
+        String line = reader.readLine();
+        while (line != null) {
             String[] str = line.split(" ");
             int j = 0;
             for (; j < 5; j++) {
                 if (str[j].length() != 1)
                     throw new IllegalArgumentException("invalid key format");
                 key[i][j] = (str[j]).charAt(0);
-                i++;
             }
+            i++;
             if (j != 5)
                 throw new IllegalArgumentException("invalid key format");
-        } while (line != null);
+            line = reader.readLine();
+        }
         reader.close();
         if (i != 5)
             throw new IllegalArgumentException("invalid key format");

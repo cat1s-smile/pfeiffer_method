@@ -180,7 +180,7 @@ public class Playfair {
         String[] lines = text.split("\n");
         StringBuilder encryptedText = new StringBuilder();
         for (String line : lines) {
-            encryptLine(encryptedText, line.replaceAll("[^a-zA-Z ]", ""), key);
+            encryptLine(encryptedText, line.replaceAll("[^a-z ]", ""), key);
             encryptedText.append("\n");
         }
         return encryptedText.toString();
